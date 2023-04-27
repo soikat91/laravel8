@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="{{ asset('backend/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('backend/dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('backend/plugins/toastr/toastr.css') }}">
+  
 </head>
 <body>
     <div class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -74,5 +76,70 @@
 <script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('/backend/dist/js/pages/dashboard2.js') }}"></script>
+<script src="{{ asset('/backend/plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('/backend/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
+<script>  
+  $(document).on("click", "#delete", function(e){
+      e.preventDefault();
+      var link = $(this).attr("href");
+         swal({
+           title: "Are you Want to delete?",
+           text: "Once Delete, This will be Permanently Delete!",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+           if (willDelete) {
+                window.location.href = link;
+           } else {
+             swal("Safe Data!");
+           }
+         });
+     });
+</script>
+{{-- before  logout showing alert message --}}
+<script>  
+  $(document).on("click", "#logout", function(e){
+      e.preventDefault();
+      var link = $(this).attr("href");
+         swal({
+           title: "Are you Want to logout?",
+           text: "",
+           icon: "warning",
+           buttons: true,
+           dangerMode: true,
+         })
+         .then((willDelete) => {
+           if (willDelete) {
+                window.location.href = link;
+           } else {
+             swal("Not Logout!");
+           }
+         });
+     });
+</script>
+
+
+<script>
+ @if(Session::has('messege'))
+   var type="{{Session::get('alert-type','info')}}"
+   switch(type){
+       case 'info':
+            toastr.info("{{ Session::get('messege') }}");
+            break;
+       case 'success':
+           toastr.success("{{ Session::get('messege') }}");
+           break;
+       case 'warning':
+          toastr.warning("{{ Session::get('messege') }}");
+           break;
+       case 'error':
+           toastr.error("{{ Session::get('messege') }}");
+           break;
+         }
+ @endif
+</script>
 </body>
 </html>
