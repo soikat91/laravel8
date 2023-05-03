@@ -45,4 +45,37 @@ class CategoryController extends Controller
 
      
    }
+
+
+   public function edit($id){
+
+     $data= DB::table('categories')->where('id',$id)->first();
+      
+      return response()->json($data);
+   }
+
+
+   public function  update(Request $request){
+        
+       // $id=$request->id;
+        $data=array();
+        $data['category_name']=$request->category_name;     
+        $data['category_slug']=Str::slug($request->category_name, '-');    
+        // dd($data);   
+
+        DB::table('categories')->where('id',$request->id)->update($data);
+        
+        $notification=array('message'=>"Category updated",'alert-type'=>"success");
+        return redirect()->back()->with($notification);
+
+   }
+
+   public function distroy($id){
+
+         DB::table('categories')->where('id',$id)->delete();
+         $notification=array('message'=>"Category Inserted",'alert-type'=>"success");
+         return redirect()->back()->with($notification);
+   }
+
+
 }

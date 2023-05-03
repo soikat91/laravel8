@@ -24,7 +24,7 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title">All categories list here</h3>
+                  <h3 class="card-title">Sub Category</h3>
                 </div>
                 <!-- /.card-header -->
                   <div class="card-body">
@@ -32,22 +32,25 @@
                       <thead>
                       <tr>
                         <th>SL</th>
-                        <th>Category Name</th>
-                        <th>Category Slug</th>                     
+                        <th>Sub Category Name</th>
+                        <th>Sub Category Slug</th>                     
+                        <th>Category Name</th>                     
                         <th>Action</th>
                       </tr>
                       </thead>
                       <tbody>
   
-                    @foreach ($data as $key=>$category )
+                    @foreach ($data as $key=>$subCategory )
                     <tr>
                         <td>{{ $key+1 }}</td>
-                        <td>{{ $category->category_name }}</td>
-                        <td>{{ $category->category_slug }}</td>
+                        <td>{{ $subCategory->subcategory_name }}</td>
+                        <td>{{ $subCategory->subcategory_slug }}</td>
+                        <td>{{ $subCategory->category_name }}</td>
+
                        
                         <td>
-                            <a href="" class="btn btn-primary btn-sm edit" data-id="{{ $category->id }}" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
-                            <a href="{{ route("category.delete",$category->id) }}" class="btn btn-danger btn-sm" id="delete"><i class="fas fa-trash"></i></a>
+                            <a href="#" class="btn btn-primary btn-sm edit" data-id="{{ $subCategory->id }}" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
+                            <a href="{{ route("subcategory.delete",$subCategory->id) }}" class="btn btn-danger btn-sm" id="delete"><i class="fas fa-trash"></i></a>
                         </td>
                      
                       </tr>
@@ -69,21 +72,37 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Create Category</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Create Sub Category</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         
 
-            <form action="{{ route('category.store') }}" method="POST">
+            <form action="{{ route('subcategory.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
 
                     <div class="form-group">
                          
-                        <label for="category_name">Category Name</label>
-                        <input type="text" class="form-control" name="category_name" id="category_name">
+                        <label for="category_name">Category</label>
+                        
+                        <select class="form-control" name="category_id">
+
+                            <option value="">select One</option>
+                            @foreach ($category as $row)
+
+                            <option value="{{ $row->id }}">{{ $row->category_name }}</option> 
+
+                            @endforeach
+                            
+                        </select>
+                        
+                    </div>
+                    <div class="form-group">
+                         
+                        <label for="category_name">Sub Category Name</label>
+                        <input type="text" class="form-control" name="subcategory_name" id="category_name">
                         
                     </div>
                     
@@ -105,34 +124,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Category</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit SubCategory</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
 
-          <form action="{{ route('category.update') }}" method="POST">
-              @csrf
-              <div class="modal-body">
+      <div id="modal_body">
 
-                  <div class="form-group">
-                       
-                      <label for="category_name">Category Name</label>
-                      <input type="text" class="form-control" name="category_name" id="edit_category_name">
-                      <input type="hidden" class="form-control" name="id" id="edit_category_id">
-                      
-                  </div>
-                  
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Update</button>
-              </div>
-          </form>
+      </div>  
 
-      
-    
     </div>
   </div>
 </div>
@@ -142,14 +143,14 @@
    
    $('body').on('click','.edit',function(){
 
-      let catgory_id=$(this).data('id');
-      //alert(catgory_id);
+      let subcatgory_id=$(this).data('id');
+      //alert(subcatgory_id);
 
-      $.get('category/edit/'+catgory_id,function(data){
+      $.get('subcategory/edit/'+subcatgory_id,function(data){  
 
-       // console.log(data); test purpose
-       $('#edit_category_name').val(data.category_name);//database table filed name
-       $('#edit_category_id').val(data.id);//database table field name
+
+        // console.log("soikatss");
+         $('#modal_body').html(data);
     
       })
    })

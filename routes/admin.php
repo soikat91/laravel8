@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('check',function(){
@@ -21,8 +22,20 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin','middleware'=>'isAdmin']
      Route::group(['prefix'=>'category'],function(){
 
           Route::get('/','CategoryController@index')->name('category.index');
-          Route::get('/store','CategoryController@store')->name('category.store');
+          Route::post('/store','CategoryController@store')->name('category.store');
+          Route::get('/delete/{id}','CategoryController@distroy')->name('category.delete');
+          Route::get('/edit/{id}','CategoryController@edit');
+          Route::post('/update','CategoryController@update')->name('category.update');
 
+     });
+
+     Route::group(['prefix'=>'subcategory'],function(){
+
+          Route::get('/','SubCategoryController@index')->name('subcategory.index');
+          Route::post('/store','SubCategoryController@store')->name('subcategory.store');
+          Route::get('/delete/{id}','SubCategoryController@destroy')->name('subcategory.delete');
+          Route::get('/edit/{id}','SubCategoryController@edit');
+          Route::post('/update','SubCategoryController@update')->name('subcategory.update');
      });
 });
 
@@ -30,3 +43,4 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin','middleware'=>'isAdmin']
 
 //admin login route
 Route::get('/admin-login', [App\Http\Controllers\Auth\LoginController::class, 'admin_login'])->name('admin.login');
+// Route::get('/cat', [App\Http\Controllers\Admin\SubCategoryController::class, 'index'])->name('subcategory.index');
