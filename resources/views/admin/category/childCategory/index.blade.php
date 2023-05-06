@@ -11,7 +11,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <button class="btn btn-primary" data-toggle="modal" data-target="#categoryModal"> + Add New</button>
+              <button class="btn btn-primary" data-toggle="modal" data-target="#childCategoryModal"> + Add New</button>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -24,38 +24,22 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title">Sub Category</h3>
+                  <h3 class="card-title">Child Category</h3>
                 </div>
                 <!-- /.card-header -->
                   <div class="card-body">
-                    <table id="example1" class="table table-bordered table-striped table-sm">
+                    <table id="" class="table table-bordered table-striped table-sm y-table">
                       <thead>
                       <tr>
                         <th>SL</th>
-                        <th>Sub Category Name</th>
-                        <th>Sub Category Slug</th>                     
+                        <th>Child Category Name</th>
+                        <th>Child Category Slug</th>
+                        <th>Sub Category Name</th>                     
                         <th>Category Name</th>                     
                         <th>Action</th>
                       </tr>
                       </thead>
-                      <tbody>
-  
-                    @foreach ($data as $key=>$subCategory )
-                    <tr>
-                        <td>{{ $key+1 }}</td>
-                        <td>{{ $subCategory->subcategory_name }}</td>
-                        <td>{{ $subCategory->subcategory_slug }}</td>
-                        {{--   category holo function name model  subcategory table and category table join kora hoice --}}
-                        <td>{{ $subCategory->category->category_name }}</td> 
-
-                       
-                        <td>
-                            <a href="#" class="btn btn-primary btn-sm edit" data-id="{{ $subCategory->id }}" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
-                            <a href="{{ route("subcategory.delete",$subCategory->id) }}" class="btn btn-danger btn-sm" id="delete"><i class="fas fa-trash"></i></a>
-                        </td>
-                     
-                      </tr>
-                    @endforeach
+                      <tbody> 
                      
                   
                       </tbody>
@@ -69,31 +53,38 @@
   </div>
 
   <!-- Insert Category Modal Start -->
-<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="childCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Create Sub Category</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Create Child Category</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         
 
-            <form action="{{ route('subcategory.store') }}" method="POST">
+            <form action="{{ route('childCategory.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
 
                     <div class="form-group">
                          
-                        <label for="category_name">Category</label>
+                        <label for="category_name">Category/Sub Category</label>
                         
-                        <select class="form-control" name="category_id">
+                        <select class="form-control" name="subcategory_id">
 
                             <option value="">select One</option>
                             @foreach ($category as $row)
 
-                            <option value="{{ $row->id }}">{{ $row->category_name }}</option> 
+                            @php
+                                $subCat=DB::table('sub_categories')->where('category_id',$row->id)->get();
+                            @endphp
+                              <option value="{{ $row->id }}">{{ $row->category_name }}</option> 
+                              @foreach ($subCat as $row)
+                              <option value="{{ $row->id }}">---{{ $row->subcategory_name }}</option> 
+                              @endforeach
+                            
 
                             @endforeach
                             
@@ -102,8 +93,8 @@
                     </div>
                     <div class="form-group">
                          
-                        <label for="category_name">Sub Category Name</label>
-                        <input type="text" class="form-control" name="subcategory_name" id="category_name">
+                        <label for="category_name">Child Category Name</label>
+                        <input type="text" class="form-control" name="childCategory_name" id="category_name">
                         
                     </div>
                     
@@ -139,22 +130,25 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
    
-   $('body').on('click','.edit',function(){
+    $(function childCategory(){
 
-      let subcatgory_id=$(this).data('id');
-      //alert(subcatgory_id);
-
-      $.get('subcategory/edit/'+subcatgory_id,function(data){  
-
-
-        // console.log("soikatss");
-         $('#modal_body').html(data);
-    
+      let ytable=$('.table').DataTable({
+        processing:true,
+        serverSide:true,
+        ajax:"{{ route('childcategory.index') }}",
+        columns:[
+          {data:'DT_RowIndex' ,name:'DT_RoxIndex'},
+          {data:'childCategoryName', name:'childCategoryName'},
+          {data:'childCategorySlug', name:'childCategorySlug'},
+          {data:'subcategory_name', name:'subcategory_name'},
+          {data:'category_name', name:'category_name'},
+          {data:'action',name:'action',orderable:true,searchable:true}
+        ]
       })
-   })
+    })
 </script>
 
 @endsection

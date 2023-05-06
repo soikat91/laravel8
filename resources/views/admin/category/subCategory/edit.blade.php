@@ -1,4 +1,4 @@
-<form action="{{ route(subcategory.update) }}" method="POST">
+<form action="{{ route('subcategory.update')}}" method="POST">
     @csrf
     <div class="modal-body">
         
@@ -24,7 +24,7 @@
              
             <label for="category_name">SubCategory Name</label>
             <input type="text" class="form-control" name="subcategory_name" id="edit_subcategory_name" value="{{ $data->subcategory_name }}">
-            <input type="hidden" class="form-control" name="id" id="edit_subcategory_id">
+            <input type="text" class="form-control" name="id" id="edit_subcategory_id" value="{{ $data->id }}">
             
         </div>
         

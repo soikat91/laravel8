@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\ChildCategoryController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('check',function(){
@@ -36,6 +37,14 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin','middleware'=>'isAdmin']
           Route::get('/delete/{id}','SubCategoryController@destroy')->name('subcategory.delete');
           Route::get('/edit/{id}','SubCategoryController@edit');
           Route::post('/update','SubCategoryController@update')->name('subcategory.update');
+     });
+
+
+     Route::group(['prefix'=>'childcategory'],function(){
+          
+          Route::get('/','ChildCategoryController@index')->name('childcategory.index');
+          Route::post('/store','ChildCategoryController@store')->name('childCategory.store');
+          Route::get('/delete/{$id}','ChildCategoryController@delete')->name('childCategory.delete');
      });
 });
 

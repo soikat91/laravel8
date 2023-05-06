@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,11 +13,17 @@ class SubCategoryController extends Controller
 {
     public function index(){
 
-        $data=DB::table('sub_categories')->join('categories','sub_categories.category_id','categories.id')
-                            ->select('sub_categories.*','categories.category_name')->get();
+        // query builder
+        // $data=DB::table('sub_categories')->leftJoin('categories','sub_categories.category_id','categories.id')
+        //                     ->select('sub_categories.*','categories.category_name')->get();
                             
                             
-        $category=DB::table('categories')->get();                    
+        // $category=DB::table('categories')->get(); 
+        
+        
+        //ORM
+        $data=SubCategory::all();
+        $category=Category::all();
 
         return view('admin.category.subCategory.index',compact('data','category'));
         //echo "hi";
@@ -67,22 +74,18 @@ class SubCategoryController extends Controller
 
      public function update(Request $request){
 
-        $validated = $request->validate([
-            'subcategory_name' => 'required|max:55',        
-        ]);
+        // $validated = $request->validate([
+        //     'subcategory_name' => 'required|max:55',        
+        // ]);
 
         $data=array();
         $data['category_id']=$request->category_id;
         $data['subcategory_name']=$request->subcategory_name;
-        $data['subcategory_name']=Str::slug($request->subcategory_name,'-');
+        $data['subcategory_slug']=Str::slug($request->subcategory_name,'-');
+        //dd($data);
 
-        DB::table('sub_categories')->where('id',$request->id)->update($data);
-        
+         DB::table('sub_categories')->where('id',$request->id)->update($data);        
         return redirect()->back();
-
-
-
-
      }
 
 
