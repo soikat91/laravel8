@@ -149,6 +149,23 @@
         ]
       })
     })
+
+
+
+
+// child category data edit javascript
+    $('body').on('click','.edit',function(){
+      
+        let childCategoryId=$(this).data('id');
+        
+        $.get('childcategory/edit/'+childCategoryId,function($data){
+
+          $('#modal_body').html($data);
+        })  
+
+
+    
+    })
 </script>
 
 @endsection

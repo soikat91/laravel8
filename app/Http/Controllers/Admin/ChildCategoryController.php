@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use DataTables;
 use Illuminate\Support\Str;
 
-
+use function GuzzleHttp\Promise\all;
 
 class ChildCategoryController extends Controller
 {
@@ -35,7 +35,7 @@ class ChildCategoryController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action',function($row){
 
-                        $actionButton='<a href="#" class="btn btn-primary btn-sm edit" data-id="{{ $row->id }}" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
+                        $actionButton='<a href="#" class="btn btn-primary btn-sm edit" data-id="'. $row->id .' " data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
                         <a href="'.route('childCategory.delete',[$row->id]).'" class="btn btn-danger btn-sm" id="delete"><i class="fas fa-trash"></i></a>';
 
                         return $actionButton;
@@ -55,7 +55,7 @@ class ChildCategoryController extends Controller
     public function store(Request $request){
         
 
-        //dd($request->all());
+       // dd($request->all());
 
         $subCat=DB::table('sub_categories')->where('id',$request->subcategory_id)->first();
 
@@ -75,12 +75,45 @@ class ChildCategoryController extends Controller
     }
 
 
+    public function edit($id){
+        
+        $category=DB::table('categories')->get();
+        $data=DB::table('child_category_tables')->where('id',$id)->first();
+        return view('admin.category.childcategory.edit',compact('category','data'));
+
+    }
+
+
+    public function update(Request $request){
+    
+        //dd($request->all());
+
+        $subCat=DB::table('sub_categories')->where('id',$request->category_id)->first();
+
+        $data=array();
+        $data['category_id']=$subCat->category_id;
+        $data['sub_category_id']=$request->category_id;
+        $data['childCategoryName']=$request->childCategoryName;
+        $data['childCategorySlug']=Str::slug($request->childCategoryName) ;
+        // dd($data);
+
+        DB::table('child_category_tables')->where('id',$request->id)->update($data);
+
+        return redirect()->back();
+        
+
+
+    }
+
+
     public function delete($id){
 
-
-        //DB::table('child_category_tables')->where('id',$id)->delete();
         
+        $data= DB::table('child_category_tables')->where('id',$id)->delete();
+
         return redirect()->back();
+        
+      
     }
 
 }

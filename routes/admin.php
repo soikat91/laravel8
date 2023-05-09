@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\ChildCategoryController;
+use App\Http\Controllers\Admin\BrandController;
+
 use Illuminate\Support\Facades\Route;
 
 // Route::get('check',function(){
@@ -15,11 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['namespace'=>'App\Http\Controllers\Admin','middleware'=>'isAdmin'],function(){
-    
+
      Route::get('/admin/home','AdminController@admin')->name('admin.home');
      Route::get('/admin/logout','AdminController@logout')->name('admin.logout');
 
-     
+
      Route::group(['prefix'=>'category'],function(){
 
           Route::get('/','CategoryController@index')->name('category.index');
@@ -41,10 +43,20 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin','middleware'=>'isAdmin']
 
 
      Route::group(['prefix'=>'childcategory'],function(){
-          
+
           Route::get('/','ChildCategoryController@index')->name('childcategory.index');
           Route::post('/store','ChildCategoryController@store')->name('childCategory.store');
-          Route::get('/delete/{$id}','ChildCategoryController@delete')->name('childCategory.delete');
+          Route::get('/delete/{id}','ChildCategoryController@delete')->name('childCategory.delete');
+          Route::get('/edit/{id}','ChildCategoryController@edit')->name('childCategory.edit');
+          Route::post('/update','ChildCategoryController@update')->name('childCategory.update');
+     });
+
+     Route::group(['prefix'=>'brand'],function (){
+         Route::get('/','brandController@index')->name('brand.index');
+         Route::post('/store','brandController@store')->name('brand.store');
+         Route::get('/delete/{id}','brandController@delete')->name('brand.delete');
+         Route::get('/edit/{id}','brandController@edit');
+         Route::post('/update','brandController@update')->name('brand.update');
      });
 });
 
