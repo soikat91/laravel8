@@ -10,7 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SubCategoryController extends Controller
-{
+{   
+    public function __construct()
+    {
+            $this->middleware('auth');
+    }
+
     public function index(){
 
         // query builder

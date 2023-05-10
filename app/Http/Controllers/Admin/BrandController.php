@@ -17,6 +17,13 @@ use File;
 
 class BrandController extends Controller
 {
+
+    
+    public function __construct()
+    {
+            $this->middleware('auth');
+    }
+
    function  index(Request $request){
     
         if($request->ajax()){
